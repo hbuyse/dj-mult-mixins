@@ -13,8 +13,11 @@ from django.utils.translation import ugettext_lazy as _  # noqa
 
 logger = logging.getLogger(__name__)
 
+__all__ = ("StaffUserRequiredMixin", "SuperUserRequiredMixin", "OwnerUserRequiredMixin",
+           "OwnerOrStaffUserRequiredMixin")
 
-class StaffMixin(UserPassesTestMixin):
+
+class StaffUserRequiredMixin(UserPassesTestMixin):
     """Mixin allows you to require a user with `is_staff` set to True."""
 
     raise_exception = True
@@ -25,7 +28,7 @@ class StaffMixin(UserPassesTestMixin):
         return self.request.user.is_staff
 
 
-class SuperuserMixin(UserPassesTestMixin):
+class SuperUserRequiredMixin(UserPassesTestMixin):
     """Mixin allows you to require a user with `is_superuser` set to True."""
 
     raise_exception = True
@@ -36,7 +39,7 @@ class SuperuserMixin(UserPassesTestMixin):
         return self.request.user.is_superuser
 
 
-class OwnerMixin(UserPassesTestMixin):
+class OwnerUserRequiredMixin(UserPassesTestMixin):
     """Mixin that test if the logged user owns the page."""
 
     permission_denied_message = _("You are not the owner of the page. You cannot view it.")
@@ -59,7 +62,7 @@ class OwnerMixin(UserPassesTestMixin):
         return self.request.user.get_username() == self.kwargs.get(self.get_owner_kwargs())
 
 
-class OwnerOrStaffMixin(UserPassesTestMixin):
+class OwnerOrStaffUserRequiredMixin(UserPassesTestMixin):
     """Mixin that check if the user logged in has the rights to view the page."""
 
     permission_denied_message = _("You are not the owner of the page nor a staff user. You cannot view it.")

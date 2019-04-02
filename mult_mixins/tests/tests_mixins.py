@@ -10,16 +10,21 @@ from django.test import RequestFactory, TestCase
 from django.views.generic import View
 
 # Current django project
-from mult_mixins.mixins import OwnerMixin, OwnerOrStaffMixin, StaffMixin, SuperuserMixin
+from mult_mixins.mixins import (
+    OwnerOrStaffUserRequiredMixin,
+    OwnerUserRequiredMixin,
+    StaffUserRequiredMixin,
+    SuperUserRequiredMixin
+)
 from mult_mixins.tests.helper import UserHelper
 
 
-class StaffMixinTest(TestCase):
+class StaffUserRequiredMixinTest(TestCase):
     '''
-    Tests StaffMixin like a boss
+    Tests StaffUserRequiredMixin like a boss
     '''
 
-    class StaffMixinView(StaffMixin, View):
+    class StaffUserRequiredMixinView(StaffUserRequiredMixin, View):
 
         def get(self, request, *args, **kwargs):
             return HttpResponse()
@@ -27,7 +32,7 @@ class StaffMixinTest(TestCase):
     def setUp(self):
         # Every test needs access to the request factory.
         self.request = RequestFactory().get('/rand')
-        self.view = self.StaffMixinView
+        self.view = self.StaffUserRequiredMixinView
 
     def test_anonymous(self):
         self.request.user = AnonymousUser()
@@ -57,12 +62,12 @@ class StaffMixinTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
-class SuperuserMixinTest(TestCase):
+class SuperUserRequiredMixinTest(TestCase):
     '''
-    Tests SuperuserMixin like a boss
+    Tests SuperUserRequiredMixin like a boss
     '''
 
-    class SuperuserMixinView(SuperuserMixin, View):
+    class SuperUserRequiredMixinView(SuperUserRequiredMixin, View):
 
         def get(self, request, *args, **kwargs):
             return HttpResponse()
@@ -70,7 +75,7 @@ class SuperuserMixinTest(TestCase):
     def setUp(self):
         # Every test needs access to the request factory.
         self.request = RequestFactory().get('/rand')
-        self.view = self.SuperuserMixinView
+        self.view = self.SuperUserRequiredMixinView
 
     def test_anonymous(self):
         self.request.user = AnonymousUser()
@@ -96,12 +101,12 @@ class SuperuserMixinTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
-class OwnerMixinTest(TestCase):
+class OwnerUserRequiredMixinTest(TestCase):
     '''
-    Tests OwnerMixin like a boss
+    Tests OwnerUserRequiredMixin like a boss
     '''
 
-    class OwnerMixinView(OwnerMixin, View):
+    class OwnerUserRequiredMixinView(OwnerUserRequiredMixin, View):
 
         def get(self, request, *args, **kwargs):
             return HttpResponse()
@@ -109,7 +114,7 @@ class OwnerMixinTest(TestCase):
     def setUp(self):
         # Every test needs access to the request factory.
         self.request = RequestFactory().get('/rand')
-        self.view = self.OwnerMixinView
+        self.view = self.OwnerUserRequiredMixinView
     
     def test_get_owner_kwargs_not_None(self):
         self.assertEqual(self.view(owner_kwargs='user').get_owner_kwargs(), 'user')
@@ -171,12 +176,12 @@ class OwnerMixinTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
-class OwnerOrStaffMixinTest(TestCase):
+class OwnerOrStaffUserRequiredMixinTest(TestCase):
     '''
-    Tests OwnerOrStaffMixin like a boss
+    Tests OwnerOrStaffUserRequiredMixin like a boss
     '''
 
-    class OwnerOrStaffMixinView(OwnerOrStaffMixin, View):
+    class OwnerOrStaffUserRequiredMixinView(OwnerOrStaffUserRequiredMixin, View):
 
         def get(self, request, *args, **kwargs):
             return HttpResponse()
@@ -190,7 +195,7 @@ class OwnerOrStaffMixinTest(TestCase):
     def setUp(self):
         # Every test needs access to the request factory.
         self.request = RequestFactory().get('/rand')
-        self.view = self.OwnerOrStaffMixinView
+        self.view = self.OwnerOrStaffUserRequiredMixinView
     
     def test_get_owner_kwargs_not_None(self):
         self.assertEqual(self.view(owner_kwargs='user').get_owner_kwargs(), 'user')
